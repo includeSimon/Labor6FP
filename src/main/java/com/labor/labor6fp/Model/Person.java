@@ -1,6 +1,5 @@
-package com.labor.labor6fp.Model;
+package Model;
 
-//Person class should be abstract because it is inherited by class 'Student' and 'Teacher'
 public abstract class  Person {
     protected String firstName;
     protected String lastName;

@@ -1,25 +1,32 @@
 package com.labor.labor6fp.Model;
 
+import com.labor.labor6fp.Exceptions.SizeException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 public class Course {
     private String name;
-    private Person teacher;
+    private int teacherId;
     private int maxEnrollment;
     private List<Student> studentsEnrolled;
     private int credits;
     private int id;
 
-    public Course(int id, String name, Person teacher, int maxEnrollment, int credits) {
+    public Course(int id, String name, int teacherId, int maxEnrollment, int credits) {
         this.name = name;
-        this.teacher = teacher;
+        this.teacherId = teacherId;
         this.maxEnrollment = maxEnrollment;
         this.studentsEnrolled= new ArrayList<>();
         this.credits = credits;
-        this.id=id;     //initializing a random id for each object
+        this.id=id;
+    }
+
+    public void enrollStudent(Student student) throws SizeException {
+        if (studentsEnrolled.size() == maxEnrollment)
+            throw new SizeException("The course " + toString() + " has the maximum number of students enrolled");
+
+        studentsEnrolled.add(student);
     }
 
     public String getName() {return name; }
@@ -28,12 +35,12 @@ public class Course {
         this.name = name;
     }
 
-    public Person getTeacher() {
-        return teacher;
+    public int getTeacherId() {
+        return teacherId;
     }
 
-    public void setTeacher(Person teacher) {
-        this.teacher = teacher;
+    public void setTeacherId(int id) {
+        this.teacherId = id;
     }
 
     public int getMaxEnrollment() {
@@ -70,21 +77,27 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course name = " + name +
-                ", teacher = " + teacher +
-                ", maxEnrollment = " + maxEnrollment +
-                ", credits = " + credits +
-                ", studentsEnrolled=" + studentsEnrolled +
-                ", id=" + id;
+        return  " id= " + id+
+                " courseName= " + name +
+                " teacherId= " + teacherId +
+                " maxEnrollment= " + maxEnrollment +
+                " credits= " + credits +
+                " studentsEnrolled= " + studentsEnrolled;
     }
 
     /**
      * Method to check if two objects of type class have the same id
+     *
      * @param other the other object that is compared
      * @return true if objects are identical, false otherwise
      */
     public boolean equals(Course other) {
-        return this.id == other.getId();
+        return this.id == other.getId()
+                && this.getName() == other.getName()
+                && this.getTeacherId() == other.getTeacherId()
+                && this.getCredits() == other.getCredits()
+                && this.getMaxEnrollment() == other.getMaxEnrollment()
+                && this.getStudentsEnrolled() == other.getStudentsEnrolled();
     }
 
 }

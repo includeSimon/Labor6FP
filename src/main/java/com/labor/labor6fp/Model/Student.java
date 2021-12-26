@@ -1,9 +1,11 @@
 package com.labor.labor6fp.Model;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Student extends com.labor.labor6fp.Model.Person {
-    private int totalCredits;
+public class Student extends Model.Person {
+    private int totalCredits = 0;
     private List<Course> enrolledCourses;
     private int id;
 
@@ -11,6 +13,14 @@ public class Student extends com.labor.labor6fp.Model.Person {
         super(firstName, lastName);
         this.enrolledCourses = new ArrayList<>();
         this.id = id;
+    }
+
+    public void addCourse(Course course) throws IOException{
+        if (enrolledCourses.contains(course))
+            throw new IOException();
+
+        enrolledCourses.add(course);
+        totalCredits += course.getCredits();
     }
 
     public int getTotalCredits() {
@@ -39,16 +49,15 @@ public class Student extends com.labor.labor6fp.Model.Person {
 
     @Override
     public String toString() {
-        return "Student " +
-                "first name = " + firstName +
-                " last name = " + lastName +
-                "studentId=" + id +
-                ", totalCredits=" + totalCredits +
-                ", enrolledCourses=" + enrolledCourses;
+        return " First name= " + firstName +
+                " last name= " + lastName +
+                " studentId= " + id +
+                " totalCredits= " + totalCredits;
     }
 
     /**
      * Method to check if two objects of type Student have the same id
+     *
      * @param other the other object that is compared
      * @return true if the objects match, else false
      */
