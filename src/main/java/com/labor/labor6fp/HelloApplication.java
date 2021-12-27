@@ -19,6 +19,7 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) throws SQLException {launch();
+    public static void main(String[] args) throws SQLException {
+        launch();
     }
 }

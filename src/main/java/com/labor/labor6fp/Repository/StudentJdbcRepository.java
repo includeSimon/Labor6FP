@@ -43,6 +43,26 @@ public class StudentJdbcRepository implements ICrudRepository<Student>{
         return resultStudent.next();
     }
 
+    /**
+     * returns id of student with the first and last name provided
+     *
+     * @param firstName first name of student
+     * @param lastName last name of student
+     * @return id of student if successful, 0 otherwise
+     * @throws SQLException
+     */
+    public Integer findIdByName(String firstName, String lastName) throws SQLException {
+        String Query = "select student.id from student where firstName = '%s' and lastName = '%s'".formatted(firstName,lastName);
+
+        Statement statement = connection.createStatement();
+        ResultSet resultStudent = statement.executeQuery(Query);
+
+        if (resultStudent.next())
+            return resultStudent.getInt(1);
+
+        return 0;
+    }
+
     @Override
     public List<Student> findAll() throws SQLException, InputException {
         String query = "select * from student";

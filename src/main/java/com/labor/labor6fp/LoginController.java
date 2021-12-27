@@ -1,5 +1,7 @@
 package com.labor.labor6fp;
 
+import com.labor.labor6fp.Exceptions.InputException;
+import com.labor.labor6fp.Exceptions.NullException;
 import com.labor.labor6fp.Model.Course;
 import com.labor.labor6fp.Model.Student;
 import com.labor.labor6fp.Model.Teacher;
@@ -32,17 +34,32 @@ public class LoginController {
     }
 
     @FXML
-    protected void Login(ActionEvent event) throws IOException, SQLException {
+    protected void Login(ActionEvent event) throws IOException, SQLException, InputException, NullException {
         String[] splitStr = username.getText().split("\\s+");
-          if (studentRepo.exists(splitStr[0],splitStr[1])){
-            status.setText("Login Success! Welcome Mr. Potter");
+        if (studentRepo.exists(splitStr[0],splitStr[1])){
+            status.setText("Login Success! Welcome " + splitStr[0] + " " + splitStr[1]);
             status.setTextFill(Color.GREEN);
-//            Stage stage = new Stage();
-//            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("LoginStudents.fxml"));
-//            Scene scene = new Scene(fxmlLoader.load());
-//            stage.setTitle("Hello!");
-//            stage.setScene(scene);
-//            stage.show();
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("StudentLogInWindow.fxml"));
+            Scene studentWindow = new Scene(loader.load());
+            StudentFXController controller = loader.getController();
+            controller.initData(studentRepo.findOne(studentRepo.findIdByName(splitStr[0],splitStr[1])));
+
+            Stage stage = new Stage();
+            stage.setTitle("Hello!");
+            stage.setScene(studentWindow);
+            stage.show();
+
+
+            /*Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("StudentLogInWindow.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Hello!");
+            stage.setScene(scene);
+            stage.show();
+*/
+
         }
         else status.setText("Login failed!");
     }
