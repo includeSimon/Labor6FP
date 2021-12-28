@@ -45,6 +45,7 @@ public class LoginController {
                 //send information to student controller
                 controller.initData(studentRepo.findOne(studentRepo.findIdByName(splitStr[0], splitStr[1])));
 
+
                 //get and change scene
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(studentWindow);

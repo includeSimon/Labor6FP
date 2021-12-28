@@ -82,20 +82,21 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <VBox layoutX="22.0" layoutY="178.0" prefHeight="282.0" prefWidth="476.0">
+      <VBox layoutX="22.0" layoutY="178.0" prefHeight="282.0" prefWidth="574.0">
          <children>
             <Label prefHeight="33.0" prefWidth="77.0" text="Courses">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TableView fx:id="tableView" prefHeight="200.0" prefWidth="392.0">
+            <TableView fx:id="tableView" prefHeight="200.0" prefWidth="518.0">
               <columns>
                 <TableColumn fx:id="courseId" prefWidth="52.0" text="id" />
                 <TableColumn fx:id="courseName" prefWidth="180.0" text="Name" />
                   <TableColumn fx:id="teacherId" prefWidth="66.4000244140625" text="TeacherId" />
                   <TableColumn fx:id="courseMaxEnrollment" prefWidth="99.2000732421875" text="MaxEnrollment" />
                   <TableColumn fx:id="courseCredits" prefWidth="75.20001220703125" text="Credits" />
+                  <TableColumn fx:id="courseEnrolled" prefWidth="75.20001220703125" text="Enrolled" />
               </columns>
             </TableView>
          </children>

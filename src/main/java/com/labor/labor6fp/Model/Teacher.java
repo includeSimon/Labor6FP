@@ -1,7 +1,5 @@
 package com.labor.labor6fp.Model;
 
-import com.labor.labor6fp.Course;
-
 import java.util.ArrayList;
 import java.util.List;
 

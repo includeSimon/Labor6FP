@@ -1,7 +1,6 @@
-package com.labor.labor6fp;
+package com.labor.labor6fp.Model;
 
 import com.labor.labor6fp.Exceptions.SizeException;
-import com.labor.labor6fp.Model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,9 @@ public class Course {
     private List<Student> studentsEnrolled;
     private int credits;
     private int id;
+    private String enrolled;
+
+
 
     public Course(int id, String name, int teacherId, int maxEnrollment, int credits) {
         this.name = name;
@@ -21,6 +23,7 @@ public class Course {
         this.studentsEnrolled= new ArrayList<>();
         this.credits = credits;
         this.id=id;
+        this.enrolled = "No";
     }
 
     public void enrollStudent(Student student) throws SizeException {
@@ -101,4 +104,11 @@ public class Course {
                 && this.getStudentsEnrolled() == other.getStudentsEnrolled();
     }
 
+    public String getEnrolled() {
+        return enrolled;
+    }
+
+    public void setEnrolled(String enrolled) {
+        this.enrolled = enrolled;
+    }
 }
