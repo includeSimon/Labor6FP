@@ -1,6 +1,7 @@
-package com.labor.labor6fp.Model;
+package com.labor.labor6fp;
 
 import com.labor.labor6fp.Exceptions.SizeException;
+import com.labor.labor6fp.Model.Student;
 
 import java.util.ArrayList;
 import java.util.List;

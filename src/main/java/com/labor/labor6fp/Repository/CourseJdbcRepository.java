@@ -3,7 +3,7 @@ import java.sql.*;
 
 import com.labor.labor6fp.Exceptions.InputException;
 import com.labor.labor6fp.Exceptions.NullException;
-import com.labor.labor6fp.Model.Course;
+import com.labor.labor6fp.Course;
 
 import java.util.ArrayList;
 import java.util.List;
