@@ -14,10 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -28,6 +25,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class StudentFXController implements  Initializable{
+    //student and repository declarations
     private Student currentStudent;
     private CourseJdbcRepository courseRepo;
     private CourseStudentJdbc enrolledStudents;
@@ -49,37 +47,16 @@ public class StudentFXController implements  Initializable{
     //yes if student is enrolled in this course, no otherwise
     @FXML private TableColumn<Course,String> courseEnrolled;
 
-    /**
-     * this method takes the student information from login controller and sets it in new scene
-     *
-     * @param student student chosen in login window
-     */
-    public void initData(Student student){
-        currentStudent = student;
-        studentId.setText(Integer.toString(currentStudent.getId()));
-        firstName.setText(currentStudent.getFirstName());
-        lastName.setText(currentStudent.getLastName());
-        credits.setText(Integer.toString(currentStudent.getTotalCredits()));
+    //choicebox elements
+    @FXML private ChoiceBox choiceBox;
+    @FXML private Button choiceBoxButtonSelect;
+    @FXML private Button choiceBoxButtonEnroll;
+    @FXML private Label choiceBoxLabel;
 
-        //we need to load the data after the student has been received
-        loadData();
-    }
-
-
+    //constructor
     public StudentFXController() throws SQLException {
         courseRepo = new CourseJdbcRepository();
         enrolledStudents = new CourseStudentJdbc();
-    }
-
-    /**
-     * Loads the data into the table view
-     */
-    public void loadData(){
-        try {
-            tableView.setItems(getCourses());
-        } catch (SQLException | InputException | NullException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -92,6 +69,46 @@ public class StudentFXController implements  Initializable{
         courseCredits.setCellValueFactory(new PropertyValueFactory<Course,Integer>("credits"));
         courseEnrolled.setCellValueFactory(new PropertyValueFactory<Course,String>("enrolled"));
 
+    }
+
+    /**
+     * this method takes the student information from login controller and sets it in new scene
+     *
+     * @param student student chosen in login window
+     */
+    public void initData(Student student) throws SQLException, InputException, NullException {
+        currentStudent = student;
+        studentId.setText(Integer.toString(currentStudent.getId()));
+        firstName.setText(currentStudent.getFirstName());
+        lastName.setText(currentStudent.getLastName());
+        credits.setText(Integer.toString(currentStudent.getTotalCredits()));
+
+        //we need to load the data after the student has been received
+        loadTableData();
+        loadChoiceBoxData();
+    }
+
+    /**
+     * Loads the data into the table view
+     */
+    public void loadTableData(){
+        try {
+            tableView.setItems(getCourses());
+        } catch (SQLException | InputException | NullException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads data(courses) into the choiceBox
+     */
+    public void loadChoiceBoxData() throws SQLException, InputException, NullException {
+        List<Course> courseList = courseRepo.findAll();
+
+        //add course to choicebox only if student is not enrolled in course
+        for (Course course : courseList)
+            if (enrolledStudents.findOne(course.getId(),currentStudent.getId()) == -1)
+                choiceBox.getItems().add(Integer.toString(course.getId()));
     }
 
     private ObservableList<Course> getCourses() throws SQLException, InputException, NullException {
@@ -125,4 +142,23 @@ public class StudentFXController implements  Initializable{
         stage.setScene(loginScene);
         stage.show();
     }
+
+    /**
+     * Shows course name in choiceBoxLabel by using course id from choiceBox
+     * @throws SQLException
+     * @throws InputException
+     * @throws NullException
+     */
+    public void choiceSelectButtonPushed() throws SQLException, InputException, NullException {
+        choiceBoxLabel.setText("Course selected: " + courseRepo.findOne(Integer.valueOf(choiceBox.getValue().toString())).getName());
+    }
+
+    /**
+     * Enrolls current student to selected course from choiceBox
+     */
+    public void choiceEnrollButtonPushed() throws SQLException, NullException {
+        int courseId = Integer.parseInt(choiceBox.getValue().toString());
+        enrolledStudents.save(courseId,currentStudent.getId());
+    }
 }
+
