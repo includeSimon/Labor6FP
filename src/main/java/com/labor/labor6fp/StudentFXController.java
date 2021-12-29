@@ -99,10 +99,17 @@ public class StudentFXController implements  Initializable{
         List<Course> courseList = courseRepo.findAll();
 
         //searching each course and checking if student is enrolled
+        int creditsSum = 0;
         for (Course course  : courseList)
-            if (enrolledStudents.findOne(course.getId(),currentStudent.getId()) != -1)
+            if (enrolledStudents.findOne(course.getId(),currentStudent.getId()) != -1){ //if current student is enrolled in this course
                 course.setEnrolled("Yes");
+                creditsSum += course.getCredits();
+            }
             else course.setEnrolled("No");
+
+         //after credits have been calculated, assign them to label and student
+        currentStudent.setTotalCredits(creditsSum);
+        credits.setText(Integer.toString(creditsSum));
 
         //adding courses to table
         for (Course course : courseList)
