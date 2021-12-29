@@ -35,6 +35,35 @@ public class TeacherJdbcRepository implements ICrudRepository<Teacher>{
         return teacher;
     }
 
+    public boolean exists(String firstName, String lastName) throws SQLException {
+        String Query = "select * from teacher where firstName = '%s' and lastName = '%s'".formatted(firstName,lastName);
+
+        Statement statement = connection.createStatement();
+        ResultSet resultTeacher = statement.executeQuery(Query);
+
+        return resultTeacher.next();
+    }
+
+    /**
+     * returns id of student with the first and last name provided
+     *
+     * @param firstName first name of student
+     * @param lastName last name of student
+     * @return id of student if successful, 0 otherwise
+     * @throws SQLException
+     */
+    public Integer findIdByName(String firstName, String lastName) throws SQLException {
+        String Query = "select teacher.id from teacher where firstName = '%s' and lastName = '%s'".formatted(firstName,lastName);
+
+        Statement statement = connection.createStatement();
+        ResultSet resultTeacher = statement.executeQuery(Query);
+
+        if (resultTeacher.next())
+            return resultTeacher.getInt(1);
+
+        return 0;
+    }
+
     @Override
     public List<Teacher> findAll() throws SQLException, InputException {
         String query = "select * from teacher";
