@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Student extends Model.Person {
+public class Student extends Person {
     private int totalCredits = 0;
     private List<Course> enrolledCourses;
     private int id;

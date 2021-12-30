@@ -5,6 +5,8 @@ import com.labor.labor6fp.Exceptions.NullException;
 import com.labor.labor6fp.Model.*;
 import com.labor.labor6fp.Repository.CourseJdbcRepository;
 import com.labor.labor6fp.Repository.CourseStudentJdbc;
+import com.labor.labor6fp.Repository.StudentJdbcRepository;
+import com.labor.labor6fp.Repository.TeacherJdbcRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,6 +31,7 @@ public class StudentFXController implements  Initializable{
     private Student currentStudent;
     private CourseJdbcRepository courseRepo;
     private CourseStudentJdbc enrolledStudents;
+    private StudentJdbcRepository studentRepo;
 
     @FXML private Label studentId;
     @FXML private Label firstName;
@@ -51,12 +54,11 @@ public class StudentFXController implements  Initializable{
     @FXML private ChoiceBox choiceBox;
     @FXML private Button choiceBoxButtonSelect;
     @FXML private Button choiceBoxButtonEnroll;
+    @FXML private Button choiceBoxButtonUnenroll;
     @FXML private Label choiceBoxLabel;
 
     //constructor
     public StudentFXController() throws SQLException {
-        courseRepo = new CourseJdbcRepository();
-        enrolledStudents = new CourseStudentJdbc();
     }
 
     @Override
@@ -68,7 +70,6 @@ public class StudentFXController implements  Initializable{
         courseMaxEnrollment.setCellValueFactory(new PropertyValueFactory<Course,Integer>("maxEnrollment"));
         courseCredits.setCellValueFactory(new PropertyValueFactory<Course,Integer>("credits"));
         courseEnrolled.setCellValueFactory(new PropertyValueFactory<Course,String>("enrolled"));
-
     }
 
     /**
@@ -76,8 +77,11 @@ public class StudentFXController implements  Initializable{
      *
      * @param student student chosen in login window
      */
-    public void initData(Student student) throws SQLException, InputException, NullException {
+    public void initData(Student student, CourseJdbcRepository courseRepo , StudentJdbcRepository studentRepo, TeacherJdbcRepository teacherRepo, CourseStudentJdbc enrolledStudents) throws SQLException, InputException, NullException {
         currentStudent = student;
+        this.studentRepo = studentRepo;
+        this.courseRepo = courseRepo;
+        this.enrolledStudents = enrolledStudents;
         studentId.setText(Integer.toString(currentStudent.getId()));
         firstName.setText(currentStudent.getFirstName());
         lastName.setText(currentStudent.getLastName());
@@ -107,7 +111,7 @@ public class StudentFXController implements  Initializable{
 
         //add course to choicebox only if student is not enrolled in course
         for (Course course : courseList)
-            if (enrolledStudents.findOne(course.getId(),currentStudent.getId()) == -1)
+            //if (enrolledStudents.findOne(course.getId(),currentStudent.getId()) == -1)
                 choiceBox.getItems().add(Integer.toString(course.getId()));
     }
 
@@ -126,6 +130,10 @@ public class StudentFXController implements  Initializable{
 
          //after credits have been calculated, assign them to label and student
         currentStudent.setTotalCredits(creditsSum);
+
+
+        updateStudent();
+
         credits.setText(Integer.toString(creditsSum));
 
         //adding courses to table
@@ -135,8 +143,18 @@ public class StudentFXController implements  Initializable{
         return courses;
     }
 
+    /**
+     * modifies student repository by updating student
+     * @throws SQLException
+     * @throws InputException
+     * @throws NullException
+     */
+    public void updateStudent() throws SQLException, InputException, NullException {
+        studentRepo.update(currentStudent);
+    }
+
     public void changeScreenButtonPushed(ActionEvent event) throws IOException {
-        Parent loginParent = FXMLLoader.load(getClass().getResource("LoginStudents.fxml"));
+        Parent loginParent = FXMLLoader.load(getClass().getResource("Login.fxml"));
         Scene loginScene = new Scene(loginParent);
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         stage.setScene(loginScene);
@@ -159,6 +177,24 @@ public class StudentFXController implements  Initializable{
     public void choiceEnrollButtonPushed() throws SQLException, NullException {
         int courseId = Integer.parseInt(choiceBox.getValue().toString());
         enrolledStudents.save(courseId,currentStudent.getId());
+    }
+
+    /**
+     * Unenrolls current student from selected course in choiceBox
+     */
+    public void choiceUnenrollButtonPushed() throws SQLException, NullException, InputException {
+        int choiceBoxCourseId = Integer.parseInt(choiceBox.getValue().toString());
+        int pairId = enrolledStudents.findOne(choiceBoxCourseId,currentStudent.getId());
+
+        //delete pair from enrolled Students
+        enrolledStudents.delete(pairId);
+
+        //modify student credits
+        int remainingCredits = currentStudent.getTotalCredits() - courseRepo.findOne(choiceBoxCourseId).getCredits();
+        currentStudent.setTotalCredits(remainingCredits);
+
+        //update student
+        studentRepo.update(currentStudent);
     }
 }
 

@@ -2,6 +2,8 @@ package com.labor.labor6fp;
 
 import com.labor.labor6fp.Exceptions.InputException;
 import com.labor.labor6fp.Exceptions.NullException;
+import com.labor.labor6fp.Repository.CourseJdbcRepository;
+import com.labor.labor6fp.Repository.CourseStudentJdbc;
 import com.labor.labor6fp.Repository.StudentJdbcRepository;
 import com.labor.labor6fp.Repository.TeacherJdbcRepository;
 import javafx.event.ActionEvent;
@@ -21,6 +23,9 @@ import java.sql.SQLException;
 public class LoginController {
     private StudentJdbcRepository studentRepo;
     private TeacherJdbcRepository teacherRepo;
+    private CourseJdbcRepository courseRepo;
+    private CourseStudentJdbc enrolledStudents;
+
     @FXML
     private Label status;
 
@@ -33,6 +38,8 @@ public class LoginController {
     public LoginController() throws SQLException {
         studentRepo = new StudentJdbcRepository();
         teacherRepo = new TeacherJdbcRepository();
+        courseRepo = new CourseJdbcRepository();
+        enrolledStudents = new CourseStudentJdbc();
     }
 
     @FXML
@@ -50,7 +57,7 @@ public class LoginController {
                 StudentFXController controller = loader.getController();
 
                 //send information to student controller
-                controller.initData(studentRepo.findOne(studentRepo.findIdByName(splitStr[0], splitStr[1])));
+                controller.initData(studentRepo.findOne(studentRepo.findIdByName(splitStr[0], splitStr[1])),courseRepo,studentRepo,teacherRepo,enrolledStudents);
 
 
                 //get and change scene
@@ -81,7 +88,7 @@ public class LoginController {
                 TeacherFXController controller = loader.getController();
 
                 //send information to student controller
-                controller.initData(teacherRepo.findOne(teacherRepo.findIdByName(splitStr[0], splitStr[1])));
+                controller.initData(teacherRepo.findOne(teacherRepo.findIdByName(splitStr[0], splitStr[1])),courseRepo,studentRepo,enrolledStudents);
 
 
                 //get and change scene

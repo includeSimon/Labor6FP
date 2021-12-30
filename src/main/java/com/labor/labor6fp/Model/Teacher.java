@@ -3,7 +3,7 @@ package com.labor.labor6fp.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Teacher extends Model.Person {
+public class Teacher extends Person {
     public List<Course> courses;
     private int id;
 

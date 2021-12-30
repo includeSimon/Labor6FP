@@ -120,6 +120,11 @@
                   <Font size="16.0" />
                </font>
             </Button>
+            <Button fx:id="choiceBoxButtonUnenroll" layoutX="10.0" layoutY="146.0" mnemonicParsing="false" onAction="#choiceUnenrollButtonPushed" prefHeight="40.0" prefWidth="209.0" text="Unenroll">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
          </children>
       </VBox>
    </children>

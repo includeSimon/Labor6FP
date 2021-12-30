@@ -27,9 +27,12 @@ public class StudentJdbcRepository implements ICrudRepository<Student>{
         Statement statement = connection.createStatement();
         ResultSet resultStudent = statement.executeQuery(studentQuery);
 
-        if (resultStudent.next())
-            student = new Student(resultStudent.getInt(1),resultStudent.getString(2),resultStudent.getString(3));
-        else throw new InputException("There is no student with id " + id);
+        if (resultStudent.next()) {
+            int totalCredits = resultStudent.getInt(4);
+            student = new Student(resultStudent.getInt(1), resultStudent.getString(2), resultStudent.getString(3));
+            student.setTotalCredits(totalCredits);
+        }
+            else throw new InputException("There is no student with id " + id);
 
         return student;
     }
@@ -72,7 +75,9 @@ public class StudentJdbcRepository implements ICrudRepository<Student>{
         List<Student> studentList = new ArrayList<>();
 
         while (resultStudent.next()){
+            int totalCredits = resultStudent.getInt(4);
             Student student = new Student(resultStudent.getInt(1),resultStudent.getString(2),resultStudent.getString(3));
+            student.setTotalCredits(totalCredits);
             studentList.add(student);
         }
 

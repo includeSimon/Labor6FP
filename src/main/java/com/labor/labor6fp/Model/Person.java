@@ -1,4 +1,4 @@
-package Model;
+package com.labor.labor6fp.Model;
 
 public abstract class  Person {
     protected String firstName;
